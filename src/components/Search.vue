@@ -48,11 +48,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.negative .dog {
-  position: fixed;
-  left: 25%;
-  top: 62%;
-}
 .negative .dog .mouth{
   height: 11px;
   margin: 8px auto 0px;
