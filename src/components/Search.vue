@@ -1,7 +1,7 @@
 <template>
   <section class="container-search">
     <div class="container">
-      <h1>Verificar o status do site</h1>
+      <h1>Cusco <span>o seu companheiro de compras!</span></h1>
       <h2>Trabalhando por uma Web mais segura</h2>
       <div class="box-search">
         <input
@@ -9,9 +9,17 @@
           type="text"
           placeholder="Pesquisar por URL"
           aria-labelledby="check-site-status"
+          v-model="url"
+          @blur="farejar()"
         />
-        <a href="#" class="hvr-sweep-to-right">Pesquisar</a>
+        <a href="#" class="hvr-sweep-to-right" @click="farejar()">Farejar</a>
       </div>
+            <ul class="suggestion">
+        <li v-if="urlCondition === 'negative'" class="title">Alternativa seguras:</li>
+        <li v-for="(site, index) in status[urlCondition].suggestedSites" :key="index">
+          <a :href="site.link">{{ site.title }} - {{ site.link }}</a>
+        </li>
+      </ul>
     </div>
     <div class="container-dog">
       <div class="dog">
@@ -32,22 +40,85 @@
         </div>
         <div class="tail"></div>
       </div>
-      <h1 class="status"> Status </h1>
+      <h1 class="status"> {{ status[urlCondition].message }} </h1>
     </div>
     <footer>
       <div class="container result">Informações do site</div>
+
     </footer>
   </section>
 </template>
 
 <script>
 export default {
-  name: "Search"
+  name: "Search",
+  data () {
+    return {
+      url: '',
+      urlCondition: '',
+      status: {
+        'negative': {
+          message: 'Suspeito!',
+          suggestedSites: []
+        },
+        'positive': {
+          message: 'Confiável!'
+        },
+        '': {
+          message: ''
+        }
+      }
+    }
+  },
+  methods: {
+    farejar () {
+      this.urlCondition = ''
+
+      if (this.url.includes('https://vigarani-pneumatica.lojaintegrada.com.br')) {
+        this.urlCondition = 'negative'
+
+        this.status[this.urlCondition].suggestedSites = [
+          {
+            link: 'https://www.dpaschoal.com.br/',
+            title: 'Dpaschoal'
+          },
+          {
+            link: 'https://lojasegura.zepneus.com.br/',
+            title: 'Zé Pneus'
+          }          
+        ]
+      }
+
+      if (!this.url.includes('https://vigarani-pneumatica.lojaintegrada.com.br')) {
+        this.urlCondition = 'positive'
+      }
+
+      if (this.url === '') {
+        this.urlCondition = ''
+      }
+
+    document.getElementById('principal').classList = ''
+      document.getElementById('principal').classList.add(this.urlCondition)
+
+      if (this.urlCondition === 'negative') {
+        const audio = new Audio(require('./bark.mp3'))
+
+        audio.play()
+      }
+    }
+  }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.negative .container-dog:before{
+  background-color: #333;
+}
+.negative .dog .ears::before,
+.negative .dog .ears::after{
+  transform: none;
+}
 .negative .dog .mouth{
   height: 11px;
   margin: 8px auto 0px;
@@ -99,6 +170,8 @@ export default {
   left: 31px;
   text-align: center;
   font-size: 50px;
+  padding-top: 10px;
+    padding-left: 11px;
 }
 .container-dog:before {
   content: '';
@@ -140,6 +213,24 @@ export default {
   height: 2px;
   opacity: 0;
 }
+.suggestion{
+  margin: 40px 0 0 0;
+  padding: 0;
+}
+.suggestion li.title{
+  font-weight: bold;
+    font-size: 1.5em;
+}
+.suggestion li, .suggestion li a{
+color: #FFF;
+    font-weight: 100;
+    font-size: 1.2em;
+    text-align: left;
+    font-family: monospace;
+    text-decoration: none;
+    list-style: none;
+}
+.suggestion li { margin-bottom: 15px;}
 .container-search .container.active {
   min-height: 300px;    
 }
@@ -163,12 +254,18 @@ h1 {
   color:#4E8EDB;
   width: 90%;
 }
+h1 span{
+  font-size: 30px;
+  display: block;
+  padding-left: 6px;
+  }
 h2 {
   font-weight: 100;
   font-size: 2em;
   font-family: monospace;
   color:#4E8EDB;
   text-align: left;
+  opacity: 0;
 }
 .search {
   display: block;
