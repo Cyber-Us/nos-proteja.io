@@ -15,9 +15,8 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 html {
-  background-color: #2c353a;
   overflow-y: scroll;
   font-family: Open Sans, sans-serif;
   font-style: normal;
@@ -28,6 +27,14 @@ html {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+html.positive {
+  background-color: #3EAB6C;
+}
+html.negative {
+  background-color: #CB3832;
 }
 body {
   margin: 0;
@@ -53,7 +60,7 @@ summary {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #757575;
   margin-top: 60px;
 }
 </style>
